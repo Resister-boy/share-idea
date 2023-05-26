@@ -1,0 +1,38 @@
+{
+  "name": "share-idea",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.7.13",
+    "@types/node": "18.15.13",
+    "@types/react": "18.0.38",
+    "@types/react-dom": "18.0.11",
+    "autoprefixer": "10.4.14",
+    "dotenv": "^16.0.3",
+    "eslint": "8.39.0",
+    "eslint-config-next": "13.3.1",
+    "framer-motion": "^10.12.8",
+    "graphql": "^16.6.0",
+    "next": "13.3.1",
+    "next-auth": "^4.22.1",
+    "postcss": "8.4.23",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.43.9",
+    "react-hot-toast": "^2.4.1",
+    "react-timeago": "^7.1.0",
+    "recoil": "^0.7.7",
+    "tailwindcss": "3.3.1",
+    "typescript": "5.0.4",
+    "yarn": "^1.22.19"
+  },
+  "devDependencies": {
+    "@types/react-timeago": "^4.1.3"
+  }
+}

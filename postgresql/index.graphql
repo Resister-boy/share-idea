@@ -1,0 +1,362 @@
+type comment {
+  user_id: ID
+  post_id: ID
+  id: ID!
+  created_at: DateTime
+  comment: String
+}
+
+type post {
+  user_id: ID
+  updated_at: DateTime!
+  topic_id: ID!
+  title: String
+  tags_id: String!
+  subtitle: String
+  image: String
+  id: ID!
+  created_at: DateTime
+  body: String
+}
+
+type tag {
+  updated_at: DateTime!
+  tag: String
+  id: ID!
+  created_at: DateTime
+}
+
+type topic {
+  updated_at: DateTime
+  topic: String
+  id: ID!
+  created_at: DateTime
+}
+
+type user {
+  username: String
+  id: ID!
+  created_at: DateTime
+}
+
+type vote {
+  user_id: ID
+  upvote: Boolean
+  post_id: ID
+  id: ID!
+  created_at: DateTime
+}
+
+"""
+The following queries are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Query {
+  " Queries for type 'comment' "
+  commentList: [comment]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comment"
+      configuration: "postgresql_config"
+    )
+  commentPaginatedList(first: Int, after: Int): [comment]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "comment", "created_at", "id", "post_id", "user_id" FROM "comment" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'post' "
+  postList: [post]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "post"
+      configuration: "postgresql_config"
+    )
+  postPaginatedList(first: Int, after: Int): [post]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "body", "created_at", "id", "image", "subtitle", "tags_id", "title", "topic_id", "updated_at", "user_id" FROM "post" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'tag' "
+  tagById(id: ID!): [tag]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "tag"
+      configuration: "postgresql_config"
+    )
+  tagByIdAndUpdated_at(id: ID!, updated_at: DateTime!): [tag]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "tag"
+      configuration: "postgresql_config"
+    )
+  tagList: [tag]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "tag"
+      configuration: "postgresql_config"
+    )
+  tagPaginatedList(first: Int, after: Int): [tag]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "tag", "updated_at" FROM "tag" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'topic' "
+  topicList: [topic]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "topic"
+      configuration: "postgresql_config"
+    )
+  topicPaginatedList(first: Int, after: Int): [topic]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "topic", "updated_at" FROM "topic" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  tagByTagName(tag: String!): [tag]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "id", "tag" FROM "tag" WHERE "tag" = $1
+      """
+      table: "tag"
+      configuration: "postgresql_config"
+    )
+  recentTagList: [tag]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "id", "tag", "updated_at" FROM "tag" ORDER BY "updated_at" DESC LIMIT 10;
+      """
+      table: "tag"
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'user' "
+  userList: [user]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "user"
+      configuration: "postgresql_config"
+    )
+  userPaginatedList(first: Int, after: Int): [user]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "username" FROM "user" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+  " Queries for type 'vote' "
+  voteList: [vote]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "vote"
+      configuration: "postgresql_config"
+    )
+  votePaginatedList(first: Int, after: Int): [vote]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "id", "post_id", "upvote", "user_id" FROM "vote" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+}
+
+"""
+The following mutations are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Mutation {
+  " Mutations for type 'comment' "
+  deleteComment(
+    post_id: ID!
+    user_id: ID!
+    id: ID!
+    comment: String!
+    created_at: DateTime!
+  ): comment
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comment"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertComment(
+    post_id: ID
+    user_id: ID
+    comment: String
+    created_at: DateTime
+  ): comment
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comment"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'post' "
+  deletePost(
+    image: String!
+    user_id: ID!
+    topic_id: ID!
+    id: ID!
+    tags_id: String!
+    created_at: DateTime!
+    title: String!
+    updated_at: DateTime!
+    subtitle: String!
+    body: String!
+  ): post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "post"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertPost(
+    image: String
+    user_id: ID
+    topic_id: ID!
+    tags_id: String!
+    created_at: DateTime
+    title: String
+    updated_at: DateTime!
+    subtitle: String
+    body: String
+  ): post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "post"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'tag' "
+  deleteTag(
+    updated_at: DateTime!
+    tag: String!
+    created_at: DateTime!
+    id: ID!
+  ): tag
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "tag"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertTag(updated_at: DateTime!, tag: String, created_at: DateTime): tag
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "tag"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  updateTagDate(id: ID!, updated_at: DateTime!): tag
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      UPDATE "tag" SET "updated_at" = $2 WHERE "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'topic' "
+  deleteTopic(
+    topic: String!
+    updated_at: DateTime!
+    created_at: DateTime!
+    id: ID!
+  ): topic
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "topic"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertTopic(topic: String, updated_at: DateTime, created_at: DateTime): topic
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "topic"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'user' "
+  deleteUser(username: String!, created_at: DateTime!, id: ID!): user
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "user"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertUser(username: String, created_at: DateTime): user
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "user"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  " Mutations for type 'vote' "
+  deleteVote(
+    post_id: ID!
+    user_id: ID!
+    id: ID!
+    created_at: DateTime!
+    upvote: Boolean!
+  ): vote
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "vote"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertVote(
+    post_id: ID
+    user_id: ID
+    created_at: DateTime
+    upvote: Boolean
+  ): vote
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "vote"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+}
